@@ -13,7 +13,7 @@
   (keyup.enter)="addTodo()"
 />
 
-<div class="todo-item" *ngFor="let todo of todos">
+<div class="todo-item" *ngFor="let todo of filterTodos()">
   <div class="todo-item-left">
     <input
       type="checkbox"
@@ -46,8 +46,9 @@
 
 <div class="extra-container">
   <div>
-    <label *ngIf="!isAllCompleted()"
-      ><input type="checkbox" (click)="handleCheckAll()" /> Check All</label
+    <label *ngIf="filterTodos().length > 0">
+      <input type="checkbox" (change)="checkAll()" [(ngModel)]="isCheckedAll" />
+      Check All</label
     >
   </div>
   <div>{{ remaining() }} items left</div>
@@ -55,19 +56,25 @@
 
 <div class="extra-container">
   <div>
-    <button>
+    <button [ngClass]="{ active: filter === 'all' }" (click)="filter = 'all'">
       All
     </button>
-    <button>
+    <button
+      [ngClass]="{ active: filter === 'active' }"
+      (click)="filter = 'active'"
+    >
       Active
     </button>
-    <button>
+    <button
+      [ngClass]="{ active: filter === 'completed' }"
+      (click)="filter = 'completed'"
+    >
       Completed
     </button>
   </div>
 
   <div>
-    <button *ngIf="isAnyCompleted()" (click)="handleClearAll()">
+    <button *ngIf="isAnyCompleted()" (click)="clearCompleted()">
       Clear Completed
     </button>
   </div>

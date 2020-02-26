@@ -12,12 +12,16 @@ export class TodoListComponent implements OnInit {
   todoTitle: string;
   todoId: number;
   beforeEditCache: string;
+  filter: string;
+  isCheckedAll: boolean;
   constructor() {}
 
   ngOnInit(): void {
     this.todoTitle = "";
     this.todoId = 4;
     this.beforeEditCache = "";
+    this.filter = "all";
+    this.isCheckedAll = false;
     this.todos = [
       {
         id: 1,
@@ -90,14 +94,23 @@ export class TodoListComponent implements OnInit {
     return this.todos.every(todo => todo.completed);
   }
 
-  handleCheckAll(): void {
+  checkAll(): void {
     this.todos = this.todos.map(todo => {
-      return { ...todo, completed: true };
+      return { ...todo, completed: this.isCheckedAll };
     });
   }
-  handleClearAll(): void {
-    this.todos = this.todos.map(todo => {
-      return { ...todo, completed: false };
-    });
+  clearCompleted(): void {
+    this.todos = this.todos.filter(todo => !todo.completed);
+  }
+
+  filterTodos(): Todo[] {
+    switch (this.filter) {
+      case "all":
+        return this.todos;
+      case "completed":
+        return this.todos.filter(todo => todo.completed);
+      case "active":
+        return this.todos.filter(todo => !todo.completed);
+    }
   }
 }
